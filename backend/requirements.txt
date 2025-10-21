@@ -1,0 +1,30 @@
+# FastAPI and server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# LlamaIndex core and integrations
+llama-index==0.10.11
+llama-index-llms-ollama==0.1.2
+llama-index-embeddings-ollama==0.1.2
+llama-index-vector-stores-qdrant==0.2.8
+
+# Qdrant client
+qdrant-client==1.8.0
+
+# Document loaders
+pypdf==4.0.1
+python-docx==1.1.0
+beautifulsoup4==4.12.3
+
+# Database support (optional)
+psycopg2-binary==2.9.9
+pymysql==1.1.0
+sqlalchemy==2.0.25
+
+# Environment variables
+python-dotenv==1.0.1
+
+# Utilities
+pydantic==2.5.3
+pydantic-settings==2.1.0

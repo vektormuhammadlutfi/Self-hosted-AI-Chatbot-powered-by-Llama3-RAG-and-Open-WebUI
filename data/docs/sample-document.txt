@@ -1,0 +1,129 @@
+# Sample Document for RAG Chatbot
+
+Welcome to the RAG Chatbot sample document!
+
+## What is RAG?
+
+Retrieval-Augmented Generation (RAG) is a technique that enhances Large Language Models (LLMs) by providing them with relevant context from external documents. Instead of relying solely on the model's training data, RAG systems:
+
+1. **Retrieve** relevant information from a knowledge base
+2. **Augment** the user's query with this context
+3. **Generate** a response based on both the query and retrieved information
+
+## Key Components
+
+### Vector Database (Qdrant)
+Qdrant stores document embeddings—numerical representations of text that capture semantic meaning. When you ask a question, the system finds the most relevant document chunks based on semantic similarity.
+
+### LLM Runtime (Ollama)
+Ollama runs the language model (Llama3) locally on your machine. This ensures:
+- Complete privacy (no data sent to external APIs)
+- No usage costs
+- Fast response times
+- Offline capability
+
+### LlamaIndex Framework
+LlamaIndex orchestrates the RAG pipeline:
+- Splits documents into manageable chunks
+- Creates embeddings using the language model
+- Manages the retrieval and generation process
+- Optimizes context selection
+
+## Benefits of This System
+
+### Privacy First
+All data stays on your machine or VPS. No external API calls, no data sharing.
+
+### Cost Effective
+After the initial setup, there are no ongoing costs. No per-query fees or API subscriptions.
+
+### Customizable
+You control:
+- Which model to use
+- How documents are chunked
+- The retrieval parameters
+- The deployment environment
+
+### Production Ready
+Built with FastAPI and Docker, this system is ready for real-world deployment.
+
+## Use Cases
+
+This RAG chatbot is perfect for:
+- **Internal Knowledge Bases**: Company documentation, policies, procedures
+- **Research Assistants**: Academic papers, research notes
+- **Customer Support**: Product manuals, FAQ databases
+- **Personal Knowledge Management**: Notes, articles, books
+
+## Getting Started
+
+1. Add your documents to the `data/docs` folder
+2. Run the loader to index them
+3. Start asking questions!
+
+The chatbot will use your documents to provide accurate, contextual answers.
+
+## Example Questions
+
+Try asking:
+- "What are the key benefits of using RAG?"
+- "How does the vector database work?"
+- "What use cases is this system good for?"
+- "How do I add more documents?"
+
+## Technical Details
+
+### Document Processing
+Documents are split into chunks (default 512 tokens) with overlap (default 50 tokens) to maintain context across boundaries.
+
+### Embedding Model
+The same model used for generation (Llama3) creates embeddings. This ensures consistency between retrieval and generation.
+
+### Similarity Search
+Qdrant uses cosine similarity to find the top-k most relevant chunks (default k=5) for each query.
+
+### Response Generation
+The LLM receives:
+1. The user's question
+2. The retrieved document chunks
+3. Instructions to answer based on the context
+
+This ensures responses are grounded in your actual documents.
+
+## Maintenance
+
+### Adding Documents
+Simply copy new files to `data/docs` and run the loader again. New documents are added to the existing index.
+
+### Updating Documents
+If you modify a document, you may want to clear the vector database and re-index everything to ensure consistency.
+
+### Monitoring
+Use the `/stats` API endpoint to check how many documents are indexed and the health of your system.
+
+## Advanced Features
+
+### Database Integration
+You can also index data from PostgreSQL or MySQL databases using the `db_loader.py` script. Perfect for:
+- FAQ tables
+- Product catalogs
+- User-generated content
+
+### Multiple Collections
+You can create separate collections for different document types or use cases by changing the `QDRANT_COLLECTION` environment variable.
+
+### Model Selection
+While this setup uses Llama3, you can use any model supported by Ollama:
+- Mistral (faster, smaller)
+- CodeLlama (for code-related questions)
+- Neural-Chat (optimized for conversations)
+
+## Conclusion
+
+You now have a powerful, private, and cost-effective RAG chatbot! This system gives you the flexibility of modern AI assistants while keeping your data under your control.
+
+Happy exploring!
+
+---
+
+**Pro Tip**: The quality of answers depends on the quality and relevance of your indexed documents. Start with well-structured, informative content for best results.

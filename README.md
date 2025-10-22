@@ -5,20 +5,24 @@ A self-hostable, open-source chatbot using **Retrieval-Augmented Generation (RAG
 ## 🎯 Features
 
 - **Local-first**: Run entirely on your machine or VPS—no external API keys required
+- **Multi-model Support**: Switch between Ollama (local), OpenRouter (GPT-4, Claude), and Gemini
 - **Document learning**: Upload PDFs, TXT, DOCX files and the chatbot learns from them
 - **Database integration**: Optionally index content from PostgreSQL or MySQL tables
-- **Modern stack**: FastAPI backend, Qdrant vector DB, Ollama for LLM inference
+- **BPS Integration**: Query Indonesian statistical data from BPS Web API
+- **Modern stack**: FastAPI backend, Qdrant vector DB, multiple LLM providers
+- **Beautiful API Docs**: Interactive Scalar documentation with model selection
 - **Production-ready**: Fully containerized with Docker Compose
 
 ## 🧱 Tech Stack
 
 | Component | Technology |
 |-----------|-----------|
-| LLM Runtime | Ollama (Llama3) |
+| LLM Runtime | Ollama (Llama3), OpenRouter, Gemini |
 | RAG Framework | LlamaIndex |
 | Vector Database | Qdrant |
-| Backend API | FastAPI |
+| Backend API | FastAPI with Scalar Docs |
 | Frontend UI | Open WebUI |
+| External APIs | BPS (Indonesian Statistics) |
 | Database (optional) | PostgreSQL / MySQL |
 | Containerization | Docker Compose |
 
@@ -133,7 +137,9 @@ INFO - ✓ Documents successfully indexed into Qdrant!
 |---------|-----|---------|
 | **Open WebUI** | http://localhost:3000 | Chat interface |
 | **FastAPI Backend** | http://localhost:8000 | API endpoints |
-| **API Docs** | http://localhost:8000/docs | Interactive API documentation |
+| **API Docs (Scalar)** | http://localhost:8000/docs | 🎨 Beautiful interactive API documentation |
+| **API Docs (ReDoc)** | http://localhost:8000/redoc | Alternative API documentation |
+| **OpenAPI Spec** | http://localhost:8000/openapi.json | Raw OpenAPI specification |
 | **Qdrant Dashboard** | http://localhost:6333/dashboard | Vector database UI |
 
 ### Testing the API
@@ -358,45 +364,77 @@ If you see OOM errors:
 
 ## 📚 API Reference
 
-### POST `/ask`
+### 🎨 Interactive API Documentation
 
-Ask a question based on indexed documents.
+Visit **[http://localhost:8000/docs](http://localhost:8000/docs)** for beautiful, interactive API documentation powered by Scalar.
+
+The documentation includes:
+- ✨ Modern, clean interface
+- 🧪 Try out all endpoints directly in the browser
+- 🤖 **Model Management** - List and switch AI models
+- 📊 **BPS Integration** - Query Indonesian statistics
+- 📖 Complete request/response examples
+- 🔍 Search functionality
+- 📱 Mobile-friendly design
+- 🎯 Code examples in multiple languages
+
+### Quick API Overview
+
+#### 🤖 Model Management
+
+**GET `/models`** - List all available AI models (Ollama, OpenRouter, Gemini)
+**POST `/models/select`** - Switch to a different model
+**Request:** `{"model_id": "openai/gpt-4"}`
+
+#### 📊 BPS Integration
+
+**GET `/bps/info`** - Get BPS API information and setup guide
+**POST `/bps/query`** - Query Indonesian statistical data
+**Example:** Get Pinrang news, publications, statistical indicators
+
+#### POST `/ask` - Ask a Question
+
+Ask a question and get an AI-generated answer based on your indexed documents.
 
 **Request:**
 ```json
 {
-  "question": "What are the key features?"
+  "question": "What are the key features?",
+  "max_sources": 3
 }
 ```
 
 **Response:**
 ```json
 {
-  "answer": "The key features include...",
+  "answer": "The key features include document learning, semantic search...",
   "sources": [
     {
-      "text": "Document excerpt...",
-      "score": 0.85,
-      "metadata": {"filename": "guide.pdf"}
+      "text": "Document excerpt showing relevant information...",
+      "score": 0.89,
+      "metadata": {"filename": "guide.pdf", "page": 1}
     }
-  ]
+  ],
+  "query_time": 1.23
 }
 ```
 
-### GET `/health`
+#### GET `/health` - Health Check
 
-Check if the service is ready.
+Check if the API and RAG engine are running properly.
 
 **Response:**
 ```json
 {
-  "status": "healthy"
+  "status": "healthy",
+  "rag_engine": "initialized",
+  "timestamp": "2025-10-22T10:30:00Z"
 }
 ```
 
-### GET `/stats`
+#### GET `/stats` - Collection Statistics
 
-Get vector database statistics.
+Get statistics about your indexed documents.
 
 **Response:**
 ```json
@@ -404,9 +442,38 @@ Get vector database statistics.
   "collection_name": "documents",
   "vectors_count": 150,
   "points_count": 150,
+  "total_queries": 42,
   "status": "green"
 }
 ```
+
+#### GET `/` - API Information
+
+Get basic API information and available endpoints.
+
+**Response:**
+```json
+{
+  "service": "🤖 RAG Chatbot API",
+  "version": "2.0.0",
+  "status": "running",
+  "documentation": {
+    "scalar": "/docs",
+    "redoc": "/redoc",
+    "openapi": "/openapi.json"
+  },
+  "endpoints": {
+    "ask": "/ask",
+    "health": "/health",
+    "stats": "/stats"
+  }
+}
+```
+
+### Alternative Documentation
+
+- **ReDoc**: [http://localhost:8000/redoc](http://localhost:8000/redoc) - Clean, three-panel design
+- **OpenAPI JSON**: [http://localhost:8000/openapi.json](http://localhost:8000/openapi.json) - Raw specification
 
 ## 🤝 Contributing
 
